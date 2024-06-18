@@ -1,0 +1,10 @@
+import express from "express";
+import router from "../router/products.router";
+import { dataUser } from "../router/user.router";
+import morgan from "morgan";
+const app = express();
+app.use(morgan("dev"));
+app.use(express.json());
+const intermedio = [router, dataUser];
+app.use("/api/v1", ...intermedio);
+export default app;
