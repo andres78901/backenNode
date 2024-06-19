@@ -2,9 +2,10 @@ import { Router } from "express";
 import { Products } from "../model/product.model";
 import { faker } from "@faker-js/faker";
 import { getMessage } from "../utility/message";
+import { verifyToken } from "../utility/verifyJwt";
 const router = Router();
 
-router.get("/getProducts", (req, res) => {
+router.get("/getProducts", verifyToken, (req, res) => {
   Products.findAll()
     .then((result) => {
       res.status(200).json(getMessage(true, 200, result));
@@ -14,7 +15,7 @@ router.get("/getProducts", (req, res) => {
     });
 });
 
-router.get("/getProduct/:product_id", (req, res) => {
+router.get("/getProduct/:product_id", verifyToken, (req, res) => {
   const id = req.params.product_id;
   Products.findOne({
     where: {
@@ -25,7 +26,7 @@ router.get("/getProduct/:product_id", (req, res) => {
   });
 });
 
-router.put("/updateProduct/:product_id", (req, res) => {
+router.put("/updateProduct/:product_id", verifyToken, (req, res) => {
   const data = req.body;
   const id = req.params.product_id;
   Products.update(
@@ -44,7 +45,7 @@ router.put("/updateProduct/:product_id", (req, res) => {
   });
 });
 
-router.delete("/deleteProduct/:product_id", (req, res) => {
+router.delete("/deleteProduct/:product_id", verifyToken, (req, res) => {
   const id = req.params.product_id;
   Products.destroy({
     where: {
@@ -55,7 +56,7 @@ router.delete("/deleteProduct/:product_id", (req, res) => {
   });
 });
 
-router.post("/createProduct", (req, res) => {
+router.post("/createProduct", verifyToken, (req, res) => {
   Products.sync().then(() => {
     const data = req.body;
     Products.create({
